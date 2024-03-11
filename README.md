@@ -1,17 +1,17 @@
 a game of minesweeper made entirely in c in a single source file\
-(not really an acomplishment but it works)\
+(not really an acomplishment but it works)
 
-requirements:\
-- a linux distribution\
-- gcc\
-- the C standard library (pretty sure it comes included with the gcc package)\
+requirements:
+- a linux distribution
+- gcc
+- the C standard library (pretty sure it comes included with the gcc package)
 
-dependencies (for debian and derivatives)\
+dependencies (for debian and derivatives)
 ```shell
 apt install build-essential
 ```
 
-dependencies (for arch and derivatives)\
+dependencies (for arch and derivatives)
 ```shell
 pacman -S gcc
 ```
