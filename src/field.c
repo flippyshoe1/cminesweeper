@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <time.h>
+#include <stdbool.h>
 
 field field_init(int s){
   field f;
@@ -19,7 +20,7 @@ void field_generate(field * fp, int bc){
   for(int i=0;i<fp->size;i++)
     for(int j=0;j<fp->size;j++){
       fp->tiles[i][j].type = TYPE_NORMAL;
-      fp->tiles[i][j].revealed = FALSE;
+      fp->tiles[i][j].revealed = HIDDEN;
     }
   
   // "plant" bombs
@@ -28,7 +29,7 @@ void field_generate(field * fp, int bc){
     do {
       x = rand() % fp->size-1;
       y = rand() % fp->size-1;
-    } while(field_iswithinborders(*fp,x,y) == FALSE ||
+    } while(field_iswithinborders(*fp,x,y) == false ||
 	    fp->tiles[y][x].type == TYPE_BOMB);
     fp->tiles[y][x].type = TYPE_BOMB;
     
@@ -55,11 +56,11 @@ void field_free(field * fp){
   fp->size = 0;
 }
 
-int field_iswithinborders(field f, int x, int y){
+bool field_iswithinborders(field f, int x, int y){
   if (x>=0 && x<f.size && y>=0 && y<f.size)
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 
 int field_dowithinborders(field f, int i){
@@ -70,43 +71,41 @@ int field_dowithinborders(field f, int i){
 }
 
 
-int field_reveal(field * fp, int x, int y){
-  if(field_iswithinborders(*fp, x, y)==FALSE)
-    return BADINPUT;
-  else if(fp->tiles[y][x].revealed >= TRUE)
-    return BADINPUT;
+game_state field_reveal(field * fp, int x, int y){
+  if(field_iswithinborders(*fp, x, y)==false)
+    return ONGOING;
+  else if(fp->tiles[y][x].revealed >= REVEALED)
+    return ONGOING;
 
-  fp->tiles[y][x].revealed = TRUE;
+  fp->tiles[y][x].revealed = REVEALED;
   
   if(fp->tiles[y][x].type == TYPE_BOMB)
-    return FAIL;
-  else if(fp->tiles[y][x].type > TYPE_NORMAL)
-    return FINE;
-  else{
+    return LOSE;
+  else if(fp->tiles[y][x].type == TYPE_NORMAL){
     field_reveal(fp, x+1, y);
     field_reveal(fp, x, y+1);
     field_reveal(fp, x-1, y);
     field_reveal(fp, x, y-1);
-    
-    return FINE;
-  } 
+  }
+
+  return ONGOING;
 }
 
-int field_didiwin(field f){
+game_state field_didiwin(field f){
   for(int i=0;i<f.size;i++)
     for(int j=0;j<f.size;j++){
       if(f.tiles[i][j].type==TYPE_BOMB)
 	continue;
-      if(f.tiles[i][j].revealed==FALSE)
-	return FINE;
+      if(f.tiles[i][j].revealed==HIDDEN)
+	return ONGOING;
     }
 
   return WIN;
 }
 
-int field_flag(field * fp, int x, int y){
-  if(fp->tiles[y][x].revealed == FALSE)
-    fp->tiles[y][x].revealed = (fp->tiles[y][x].revealed!=FLAGGED) ? FLAGGED : FALSE;
+game_state field_flag(field * fp, int x, int y){
+  if(fp->tiles[y][x].revealed == HIDDEN)
+    fp->tiles[y][x].revealed = (fp->tiles[y][x].revealed!=FLAGGED) ? FLAGGED : HIDDEN;
 
-  return FINE;
+  return ONGOING;
 }

@@ -3,11 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdbool.h>
 
 #define BOARDSIZE 9
 #define BOMBCOUNT 9
 
-int field_print(field f);
+bool field_print(field f);
 
 void drawline(int length);
 int getplayermove(field * fp);
@@ -20,24 +21,23 @@ int main(){
   field f = field_init(BOARDSIZE);
   field_generate(&f, BOMBCOUNT);
 
-  int res = START; //res is the result of the move (start just means program was started)
+  game_state res = STARTED; //res is the result of the move (start just means program was started)
   while(1){
     system("clear");
     field_print(f);
 
     switch(res){
-    case START:
+    case STARTED:
       printf("welcome to cminesweeper!");
       break;
-    case FAIL:
+    case LOSE:
       printf("tough luck, you lost...");
       break;
     case WIN:
       printf("congratulations! you won!");
       break;
-    case FINE:
+    case ONGOING:
       break;
-    case BADINPUT:
     default:
       printf("sorry? didnt get that. (invalid input)");
       break;
@@ -45,7 +45,7 @@ int main(){
 
     printf("\n\n");
 
-    if(res==FAIL || res==WIN)
+    if(res==LOSE || res==WIN)
       break;
 
     res = getplayermove(&f);
@@ -55,7 +55,7 @@ int main(){
   return 0;
 }
 
-int field_print(field f){
+bool field_print(field f){
   printf(" |");
   for(int i=0;i<f.size;i++)
     printf("%d|",i);
@@ -66,7 +66,7 @@ int field_print(field f){
     printf("%d|",y);
 
     for(int x=0;x<f.size;x++){
-      if(f.tiles[y][x].revealed == FALSE)
+      if(f.tiles[y][x].revealed == HIDDEN)
 	printf("#|");
       else if (f.tiles[y][x].revealed == FLAGGED)
 	printf("F|");
@@ -81,7 +81,7 @@ int field_print(field f){
   }
 
   printf("\n");
-  return TRUE;
+  return true;
 }
 
 void drawline(int length){
@@ -103,7 +103,7 @@ int getplayermove(field * fp){
   char input[4];
   scanf("%3s", input);
 
-  int (*method)(field *, int, int) = NULL;
+  game_state (*method)(field *, int, int) = NULL;
   switch(input[0]){
   case 'f':
   case 'F':
@@ -114,18 +114,18 @@ int getplayermove(field * fp){
     method = field_reveal;
     break;
   default:
-    return BADINPUT;
+    return ONGOING;
   }
 
   if(method == NULL)
-    return BADINPUT;
+    return ONGOING;
 
   if(input[1]-'0'>10 &&
      input[2]-'0'>10)
-    return BADINPUT;
+    return ONGOING;
 
-  int res = method(fp, input[1]-'0', input[2]-'0');
-  res = (res==FINE) ? field_didiwin(*fp) : res;
+  game_state res = method(fp, input[1]-'0', input[2]-'0');
+  res = (res==ONGOING) ? field_didiwin(*fp) : res;
     
   return res;
 }
