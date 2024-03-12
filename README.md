@@ -1,5 +1,4 @@
-a game of minesweeper made entirely in c in a single source file\
-(not really an acomplishment but it works)
+a game of minesweeper made entirely in c\
 
 requirements:
 - a linux distribution
