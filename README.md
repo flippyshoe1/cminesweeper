@@ -1,4 +1,4 @@
-a game of minesweeper made entirely in c with ncurses\
+a game of minesweeper made entirely in c with ncurses
 
 requirements:
 - a linux distribution
@@ -8,7 +8,7 @@ requirements:
 
 dependencies (for debian and derivatives)
 ```shell
-## note for debian users: change the prefix to 'ncurses6' for your specific cpu architecture
+## note for debian users: change the prefix of 'ncurses6' for your specific cpu architecture
 apt install build-essential lib64ncurses6
 ```
 
