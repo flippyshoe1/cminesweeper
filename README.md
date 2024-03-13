@@ -1,18 +1,20 @@
-a game of minesweeper made entirely in c\
+a game of minesweeper made entirely in c with ncurses\
 
 requirements:
 - a linux distribution
 - gcc
 - the C standard library (pretty sure it comes included with the gcc package)
+- libncurses
 
 dependencies (for debian and derivatives)
 ```shell
-apt install build-essential
+## note for debian users: change the prefix to 'ncurses6' for your specific cpu architecture
+apt install build-essential lib64ncurses6
 ```
 
 dependencies (for arch and derivatives)
 ```shell
-pacman -S gcc
+pacman -S gcc ncurses
 ```
 
 to build the binary

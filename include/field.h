@@ -77,5 +77,9 @@ game_state field_didiwin(field f);
 // may be changed later?
 game_state field_flag(field * fp, int x, int y);
 
+// returns the amount of flags in a field
+// input: f (field) - field you wish to test upon
+// output: amount of flags in the field
+int return_flag_count(field f);
 
 #endif

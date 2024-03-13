@@ -1,12 +1,13 @@
 DEBUG_FLAGS = -Wall -Wextra -pedantic
 TARGET = cminesweeper
-MODE_FLAGS = $(DEBUG_FLAGS)
+COMPILER_FLAGS = $(DEBUG_FLAGS)
+LINKER_FLAGS = -l ncurses
 
 all: $(TARGET)
 
 $(TARGET): object
-	gcc -o $@ ./*.o
+	gcc -o $@ ./*.o $(LINKER_FLAGS)
 
 object:
-	gcc $(MODE_FLAGS) -I include/ -c src/*.c
+	gcc $(COMPILER_FLAGS) -I include/ -c src/*.c
 

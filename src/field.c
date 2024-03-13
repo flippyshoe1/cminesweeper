@@ -104,8 +104,18 @@ game_state field_didiwin(field f){
 }
 
 game_state field_flag(field * fp, int x, int y){
-  if(fp->tiles[y][x].revealed == HIDDEN)
+  if(fp->tiles[y][x].revealed != REVEALED)
     fp->tiles[y][x].revealed = (fp->tiles[y][x].revealed!=FLAGGED) ? FLAGGED : HIDDEN;
 
   return ONGOING;
+}
+
+int return_flag_count(field f){
+  int i = 0;
+  for(int y=0;y<f.size;y++)
+    for(int x=0;x<f.size;x++)
+      if(f.tiles[y][x].revealed == FLAGGED)
+	i++;
+
+  return i;
 }
